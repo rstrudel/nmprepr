@@ -1,0 +1,24 @@
+name: nmprepr
+dependencies:
+  - python=3.8
+  - conda-forge::pinocchio=2.5.2
+  - conda-forge::gepetto-viewer-corba=5.5.1
+  - conda-forge::pyembree=0.1.6
+  - pytorch::pytorch=1.7.0
+  - pytorch::torchvision=0.8.1
+  # - pytorch::cudatoolkit==10.2
+  - numpy=1.19.2
+  - pip
+  - matplotlib=3.3.2
+  - pip:
+    - click
+    - tqdm
+    - pyyaml
+    - gtimer
+    - open3d==0.11.1
+    - trimesh==3.8.12
+    - gym==0.17.3
+    - tensorboard==2.3.0
+    - networkx==2.5
+    - git+https://github.com/rstrudel/nmprepr.git
+    - git+https://github.com/rstrudel/rlkit.git@nmprepr

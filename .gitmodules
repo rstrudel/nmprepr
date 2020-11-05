@@ -1,0 +1,4 @@
+[submodule "rlkit"]
+	path = rlkit
+	url = https://github.com/rstrudel/rlkit
+	branch = nmprepr
