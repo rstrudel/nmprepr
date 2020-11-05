@@ -23,7 +23,7 @@ CoRL 2020
 
 ## Cite
 
-Please cite the paper if you use the code or compare to our approach
+Please cite our work if you use our code or compare to our approach
 ```
 @inproceedings{strudelnmp2020,
 title={Learning Obstacle Representations for Neural Motion Planning},
