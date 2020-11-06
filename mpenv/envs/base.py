@@ -52,7 +52,7 @@ class Base(gym.Env):
         self.robot = self.add_robot(self.robot_name, bounds=None)
 
         self.info_sizes = {"collided": 1}
-        self.dict_reward = {"goal": 10, "free": -0.1, "collision": -1}
+        self.dict_reward = {"goal": 20, "free": -0.1, "collision": -4}
 
         # obs_indices store the indices at which data is stored once the vector is flattened
         # useful to recover structured data in a model
