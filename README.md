@@ -18,6 +18,7 @@ CoRL 2020
 - [Training](#training)
   - [Train on narrow passages](#narrow-passages)
   - [Train on 3D environments](#3d-environments)
+  - [Monitor experiments](#monitor)
 - [Run](#run)
 - [Logging](#logging)
 
@@ -71,6 +72,13 @@ python -m nmp.train Sphere-Boxes-64Pts-256Rays-v0 sphere_boxes --horizon 80 --se
 To train planning policies for the S-Shape
 ```
 python -m nmp.train SShape-Boxes-64Pts-256Rays-v0 sshape_boxes --horizon 80 --seed 0
+```
+
+### Monitor
+
+You can monitor experiments with
+```
+tensorboard --logdir=/path/to/experiment
 ```
 
 ## Run
