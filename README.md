@@ -93,7 +93,7 @@ Run a planning policy for the S-Shape and visualize it with gepetto-gui
 python -m nmp.run SShape-Boxes-64Pts-256Rays-v0 --exp-name log_dir/params.pkl --seed 100 --horizon 80
 ```
        
-![](images/sphere_boxes.gif){:width="50%"}
+<img src="images/sphere_boxes.gif" width="200">
 
 Evaluate the success rate of a policy on 100 episodes
 ```
