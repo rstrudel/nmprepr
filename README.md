@@ -4,7 +4,7 @@ Robin Strudel, Ricardo Garcia, Justin Carpentier, Jean-Paul Laumond, Ivan Laptev
 CoRL 2020
 
 
-![](overview.png)
+![](images/overview.png)
 
 - [Project Page](https://www.di.ens.fr/willow/research/nmp_repr/)
 - [Paper](https://arxiv.org/abs/2008.11174)
@@ -92,6 +92,8 @@ Run a planning policy for the S-Shape and visualize it with gepetto-gui
 ```
 python -m nmp.run SShape-Boxes-64Pts-256Rays-v0 --exp-name log_dir/params.pkl --seed 100 --horizon 80
 ```
+       
+![](images/sphere_boxes.gif)
 
 Evaluate the success rate of a policy on 100 episodes
 ```
