@@ -6,8 +6,6 @@ robot_ids = {
     "SShape": "s_shape",
 }
 num_samples = [16, 32, 64, 128, 180, 256, 512, 1024]
-# ray tracing parameters
-num_rays = [32, 64, 128, 240, 256, 384, 512, 1024, 2048]
 
 normals = [(False, ""), (True, "Normals")]
 
@@ -49,14 +47,13 @@ for robot_register_name, robot_name in robot_ids.items():
             )
         # Ray Tracing
         kwargs_local = kwargs.copy()
-        for nr in num_rays:
-            kwargs_local["n_rays"] = nr
-            env_str = f"{robot_register_name}-Boxes-{ns}Pts-{nr}Rays"
-            register(
-                id=f"{env_str}-v0",
-                entry_point="mpenv.envs.boxes:boxes_raytracing",
-                kwargs=kwargs_local.copy(),
-            )
+        kwargs_local["n_rays"] = 256
+        env_str = f"{robot_register_name}-Boxes-{ns}Pts-Rays"
+        register(
+            id=f"{env_str}-v0",
+            entry_point="mpenv.envs.boxes:boxes_raytracing",
+            kwargs=kwargs_local.copy(),
+        )
 
 """
 Boxes Qureshi

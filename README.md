@@ -66,12 +66,12 @@ python -m nmp.train Narrow-64Pts-LocalSurfaceNormals-v0 narrow --horizon 50 --se
 
 To train a planning policy for the Sphere
 ```
-python -m nmp.train Sphere-Boxes-64Pts-256Rays-v0 sphere_boxes --horizon 80 --seed 0
+python -m nmp.train Sphere-Boxes-64Pts-Rays-v0 sphere_boxes --horizon 80 --seed 0
 ```
 
 To train planning policies for the S-Shape
 ```
-python -m nmp.train SShape-Boxes-64Pts-256Rays-v0 sshape_boxes --horizon 80 --seed 0
+python -m nmp.train SShape-Boxes-64Pts-Rays-v0 sshape_boxes --horizon 80 --seed 0
 ```
 
 ### Monitor
@@ -90,14 +90,14 @@ gepetto-gui
 
 Run a planning policy for the S-Shape and visualize it with gepetto-gui
 ```
-python -m nmp.run SShape-Boxes-64Pts-256Rays-v0 --exp-name log_dir/params.pkl --seed 100 --horizon 80
+python -m nmp.run SShape-Boxes-64Pts-Rays-v0 --exp-name log_dir/params.pkl --seed 100 --horizon 80
 ```
        
 <img src="images/sphere_boxes.gif" width="400">
 
 Evaluate the success rate of a policy on 100 episodes
 ```
-python -m nmp.run SShape-Boxes-64Pts-256Rays-v0 --exp-name log_dir/params.pkl --seed 100 --horizon 80 --episodes 100
+python -m nmp.run SShape-Boxes-64Pts-Rays-v0 --exp-name log_dir/params.pkl --seed 100 --horizon 80 --episodes 100
 ```
 
 
