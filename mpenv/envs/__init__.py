@@ -25,17 +25,6 @@ for robot_register_name, robot_name in robot_ids.items():
         entry_point="mpenv.envs.boxes:boxes_noobst",
         kwargs=kwargs.copy(),
     )
-    # Global Voxels
-    kwargs_voxels = kwargs.copy()
-    kwargs_voxels.pop("on_surface", None)
-    kwargs_voxels.pop("add_normals", None)
-    kwargs_voxels["grid_shape"] = (16, 16, 16)
-    env_str = f"{robot_register_name}-Boxes-Voxels"
-    register(
-        id=f"{env_str}-v0",
-        entry_point="mpenv.envs.boxes:boxes_voxels",
-        kwargs=kwargs_voxels.copy(),
-    )
     for ns in num_samples:
         kwargs["n_samples"] = ns
         kwargs_global = kwargs.copy()
