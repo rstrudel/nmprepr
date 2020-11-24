@@ -35,7 +35,9 @@ class RayTracingObserver(BaseObserver):
         self.geoms = self.env.geoms
         # fixed obstacles
         self.ray_intersector, self.geoms_scene = self.geoms.ray_intersector()
-        self.rays = utils.fibonacci_sphere(self.n_rays_witness)
+        # specific to 2d case
+        theta = np.linspace(0, 2 * np.pi, self.n_rays_witness)
+        self.rays = np.stack((np.cos(theta), np.sin(theta), np.zeros_like(theta)), 1)
         self.union_pcd = np.zeros((0, 6))
         o = self.observation(o)
         return o
