@@ -76,33 +76,30 @@ for ns in num_samples:
         kwargs=kwargs_global.copy(),
     )
     kwargs_local = kwargs.copy()
-    for nr in num_rays:
-        kwargs_local["n_rays"] = nr
-        env_str = f"Sphere-Qureshi-{ns}Pts-{nr}Rays"
-        register(
-            id=f"{env_str}-v0",
-            entry_point="mpenv.envs.qureshi:qureshi_raytracing",
-            kwargs=kwargs_local.copy(),
-        )
+    kwargs_local["n_rays"] = 256
+    env_str = f"Sphere-Qureshi-{ns}Pts-Rays"
+    register(
+        id=f"{env_str}-v0",
+        entry_point="mpenv.envs.qureshi:qureshi_raytracing",
+        kwargs=kwargs_local.copy(),
+    )
 
 """
 Kavraki Slot
 """
-kwargs = {"robot_name": "s_shape"}
+kwargs = {"robot_name": "s_shape", "n_rays": 256}
 env_str = "KavrakiShape-Slot"
 register(
     id=f"{env_str}-v0", entry_point="mpenv.envs.slot:slot_noobst", kwargs=kwargs.copy(),
 )
 for ns in num_samples:
     kwargs["n_samples"] = ns
-    for nr in num_rays:
-        kwargs["n_rays"] = nr
-        env_str = f"SShape-Slot-{ns}Pts-{nr}Rays"
-        register(
-            id=f"{env_str}-v0",
-            entry_point="mpenv.envs.slot:slot_raytracing",
-            kwargs=kwargs.copy(),
-        )
+    env_str = f"SShape-Slot-{ns}Pts-Rays"
+    register(
+        id=f"{env_str}-v0",
+        entry_point="mpenv.envs.slot:slot_raytracing",
+        kwargs=kwargs.copy(),
+    )
 
 """
 Narrow 2D environments
