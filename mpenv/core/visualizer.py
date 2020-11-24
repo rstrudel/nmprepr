@@ -24,9 +24,7 @@ class Visualizer:
         # self.viewer = None
         self.node_name = "core"
 
-        self._create_viz()
-
-    def _create_viz(self):
+    def create_viz(self):
         model = self.model_wrapper.model
         geom_model = self.model_wrapper.geom_model
         self.viz = self.viz_class(model, geom_model, geom_model)
@@ -45,32 +43,11 @@ class Visualizer:
             # gui.setLightingMode("world", "ON")
         self.viz.loadViewerModel(node_name)
 
-    def _update_data(self):
-        self.model_wrapper.create_data()
-        self._create_viz()
-
     def display(self, qw=None):
         if qw is None:
             qw = self.model_wrapper.neutral_configuration()
         q = qw.q
         self.viz.display(q)
-
-    def add_geom_obj(self, geom_obj, update_data=True):
-        geom_model = self.model_wrapper.geom_model
-        geom_model.addGeometryObject(geom_obj)
-        if update_data:
-            self._update_data()
-
-    def show_bounds(self, bounds):
-        pos = bounds.mean(axis=0)
-        size = (bounds[1] - bounds[0]).astype(float)
-        workspace = Mesh(
-            name="workspace",
-            geometry=hppfcl.Box(*size),
-            placement=pin.SE3(np.eye(3), pos),
-            color=(0, 0, 1, 0.5),
-        )
-        self.add_mesh(workspace, update_data=True)
 
     def show_joints(self):
         raise ValueError("To be reimplemented")
@@ -122,19 +99,6 @@ class Visualizer:
         print("show aabb")
         self._create_data()
         self._create_viz()
-
-    def show_obstacles_pin(self, obstacles):
-        for i, sample in enumerate(obstacles):
-            rot = eigenpy.Quaternion.FromTwoVectors(np.array((0, 0, 1)), sample[3:])
-            rot = rot.toRotationMatrix()
-            cone = Mesh(
-                name=f"surf{i}",
-                geometry=hppfcl.Cone(0.03, 0.1),
-                placement=pin.SE3(rot, sample[:3]),
-                color=(0, 0, 0, 0.8),
-            )
-            self.add_mesh(cone, update_data=False)
-        self._update_data()
 
     def create_roadmap(self, name, color):
         if not self.name == "gepetto":

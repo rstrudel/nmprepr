@@ -56,24 +56,22 @@ def load_dataset_geoms(filename):
 
 
 def display_start_goal(
-    viz, robot, state, goal_state, dist_goal, start_color, goal_color
+    geom_model, robot, state, goal_state, dist_goal, start_color, goal_color
 ):
-    if viz is None:
-        raise ValueError("No visualizer instantiated.")
     start_oMg = state.oMg
     goal_oMg = goal_state.oMg
     start_oMg_np = robot.get_oMg_np(start_oMg)
     goal_oMg_np = robot.get_oMg_np(goal_oMg)
     # display start and goal ee pos
     for i, (start_i, goal_i) in enumerate(zip(start_oMg_np, goal_oMg_np)):
-        start_robot = robot.make_geom_obj(f"start{i}", i)
-        goal_robot = robot.make_geom_obj(f"goal{i}", i)
+        start_robot = robot.make_geom_obj(f"start{i}", dist_goal)
+        goal_robot = robot.make_geom_obj(f"goal{i}", dist_goal)
         start_robot.placement = pin.SE3(start_i) * start_robot.placement
         start_robot.meshColor = start_color
         goal_robot.placement = pin.SE3(goal_i) * goal_robot.placement
         goal_robot.meshColor = goal_color
         for geom_obj in [start_robot, goal_robot]:
-            viz.add_geom_obj(geom_obj)
+            geom_model.addGeometryObject(geom_obj)
 
 
 def get_bounds_geom_objs(pos_bounds):

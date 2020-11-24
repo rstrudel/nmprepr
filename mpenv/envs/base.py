@@ -146,6 +146,8 @@ class Base(gym.Env):
 
     def reset(self, **kwargs):
         self.model_wrapper = ModelWrapper()
+        if not (self.viz is None):
+            del self.viz
         self.viz = None
         self.showed_goal = False
         return self._reset(**kwargs)
@@ -297,7 +299,7 @@ class Base(gym.Env):
         self.init_viz()
         if not self.showed_goal and self.state is not None:
             utils.display_start_goal(
-                self.viz,
+                self.viz.model_wrapper.geom_model,
                 self.robot,
                 self.state,
                 self.goal_state,
@@ -305,6 +307,7 @@ class Base(gym.Env):
                 self.start_color,
                 self.goal_color,
             )
+            self.viz.create_viz()
             self.viz.display(self.goal_state)
             color = (1, 0.65, 0, 1)
             self.viz.create_roadmap("path", color=color)
