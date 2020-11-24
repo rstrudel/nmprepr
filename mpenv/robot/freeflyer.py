@@ -6,7 +6,7 @@ import hppfcl
 from mpenv.core.model import ModelWrapper
 from mpenv.robot.robot import Robot
 
-# from mpenv.core.mesh import Mesh
+from mpenv.core.mesh import Mesh
 from mpenv.core.geometry import Geometries
 from mpenv.core import utils
 
@@ -49,8 +49,10 @@ class FreeFlyer(Robot):
         """
         return q
 
-    def make_geom_obj(self, name=None, unused_index=None):
-        return self.mesh.geom_obj(name=name)
+    def make_geom_obj(self, name, radius):
+        geom = hppfcl.Sphere(radius)
+        mesh = Mesh(name=name, geometry=geom)
+        return mesh.geom_obj()
 
     def get_ee(self, oMg):
         return oMg[0]

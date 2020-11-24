@@ -70,5 +70,5 @@ class Robot:
     def project_q(self, q):
         return q
 
-    def make_geom_obj(self):
+    def make_geom_obj(self, name, radius):
         raise NotImplementedError

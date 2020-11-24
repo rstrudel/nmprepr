@@ -113,7 +113,6 @@ Narrow 2D environments
 
 num_rooms = [None, 1, 2, 5, 10, 50, 100, 1000]
 num_rooms_max_idx = [None, 1, 3, 12, 22, 155, 282, 2727]
-visibility_dist = [0.2, 0.5, 1]
 
 for (num_room, max_idx) in zip(num_rooms, num_rooms_max_idx):
     str_room = ""
@@ -185,5 +184,32 @@ for (num_room, max_idx) in zip(num_rooms, num_rooms_max_idx):
     register(
         id=str_register_env,
         entry_point="mpenv.envs.narrow:narrow_image",
+        kwargs=kwargs.copy(),
+    )
+
+"""
+Maze 2D environments
+"""
+
+
+str_register_env = f"Maze-v0"
+kwargs = {"n_rays": 256}
+for ns in num_samples:
+    kwargs["n_samples"] = ns
+
+    # Global Coordinate Frame
+    # str_register_env = f"Maze-{ns}Pts-GlobalSurface{str_normals}-v0"
+    # kwargs["coordinate_frame"] = "global"
+    # register(
+    #     id=str_register_env,
+    #     entry_point="mpenv.envs.maze:maze_pointcloud",
+    #     kwargs=kwargs.copy(),
+    # )
+
+    # Local Coordinate Frame
+    env_str = f"Maze-{ns}Pts-Rays"
+    register(
+        id=f"{env_str}-v0",
+        entry_point="mpenv.envs.maze:maze_raytracing",
         kwargs=kwargs.copy(),
     )

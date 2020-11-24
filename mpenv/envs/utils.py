@@ -24,7 +24,7 @@ ROBOTS_PROPS = {
         "link_action_dim": 3,
     },
     "sphere2d": {
-        "dist_goal": 0.07,
+        "dist_goal": 0.05,
         "action_dim": 2,
         "action_range": LINVEL_RANGE[0],
         "local": {"link_dim": 2, "goal_dim": 16, "goal_rep_dim": 2},
