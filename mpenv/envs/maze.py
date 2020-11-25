@@ -19,16 +19,15 @@ from mpenv.core.geometry import Geometries
 from mpenv.observers.robot_links import RobotLinksObserver
 from mpenv.observers.point_cloud import PointCloudObserver
 from mpenv.observers.ray_tracing import RayTracingObserver
-from mpenv.observers.image import ImageObserver
+from mpenv.observers.maze import MazeObserver
 
 
 class MazeGoal(Base):
-    def __init__(self, max_env_idx=None):
+    def __init__(self):
         super().__init__(robot_name="sphere")
 
-        self.num_obstacles = 5
-        self.max_env_idx = max_env_idx
-        self.grid_size = 10
+        self.thickness = 0.02
+        self.grid_size = 7
         self.robot_name = "sphere"
         self.freeflyer_bounds = np.array(
             [[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], [1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]]
@@ -63,9 +62,9 @@ class MazeGoal(Base):
 
     def get_obstacles_geoms(self, idx_env):
         np_random = self._np_random
-        self.maze = Maze(7, 7)
+        self.maze = Maze(self.grid_size, self.grid_size)
         self.maze.make_maze()
-        geom_objs = extract_obstacles(self.maze)
+        geom_objs = extract_obstacles(self.maze, self.thickness)
         geoms = Geometries(geom_objs)
         return geoms, idx_env
 
@@ -95,11 +94,15 @@ class MazeGoal(Base):
         pass
 
 
-def extract_obstacles(maze):
+def extract_obstacles(maze, thickness):
     scx = 1 / maze.nx
     scy = 1 / maze.ny
 
     obstacles_coord = []
+    obstacles_coord.append((0, 0, 1, 0))
+    obstacles_coord.append((0, 0, 0, 1))
+    obstacles_coord.append((1, 0, 1, 1))
+    obstacles_coord.append((0, 1, 1, 1))
     # Draw the "South" and "East" walls of each cell, if present (these
     # are the "North" and "West" walls of a neighbouring cell in
     # general, of course).
@@ -121,17 +124,14 @@ def extract_obstacles(maze):
                     (y + 1) * scy,
                 )
                 obstacles_coord.append((x1, y1, x2, y2))
-    obstacles_coord.append((1, 0, 1, 1))
-    obstacles_coord.append((0, 1, 1, 1))
-    obstacles_coord.append((0, 0, 1, 0))
-    obstacles_coord.append((0, 0, 0, 1))
     obstacles = []
-    thickness = 0.02
     for i, obst_coord in enumerate(obstacles_coord):
         x1, y1, x2, y2 = obst_coord[0], obst_coord[1], obst_coord[2], obst_coord[3]
         if np.allclose(x1, x2):
+            x1 -= thickness / 2
             x2 = x1 + thickness
         if np.allclose(y1, y2):
+            y1 -= thickness / 2
             y2 = y1 + thickness
         box_size = [x2 - x1, y2 - y1, 0.1]
         pos = [(x1 + x2) / 2, (y1 + y2) / 2, 0]
@@ -196,6 +196,14 @@ def obstacles_to_occupancy_grid(grid_size, collision):
 def maze_pointcloud(n_samples, on_surface, add_normals, coordinate_frame):
     env = MazeGoal()
     env = PointCloudObserver(env, n_samples, coordinate_frame, on_surface, add_normals)
+    env = RobotLinksObserver(env, coordinate_frame)
+    return env
+
+
+def maze_edges():
+    env = MazeGoal()
+    env = MazeObserver(env)
+    coordinate_frame = "local"
     env = RobotLinksObserver(env, coordinate_frame)
     return env
 

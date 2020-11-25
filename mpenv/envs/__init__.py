@@ -213,3 +213,7 @@ for ns in num_samples:
         entry_point="mpenv.envs.maze:maze_raytracing",
         kwargs=kwargs.copy(),
     )
+env_str = f"Maze-Global"
+register(
+    id=f"{env_str}-v0", entry_point="mpenv.envs.maze:maze_edges", kwargs={},
+)
