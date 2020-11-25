@@ -91,12 +91,12 @@ class MazeGoal(Base):
     def init_matplotlib(self):
         plt.ion()
 
-        fig = plt.figure(figsize=(10, 10))
+        fig = plt.figure(figsize=(6, 6))
         ax = fig.add_subplot(111, aspect="equal")
-        ax.set_xticks(np.linspace(0, 1, self.maze.nx + 1, endpoint=True))
-        ax.set_yticks(np.linspace(0, 1, self.maze.ny + 1, endpoint=True))
-        ax.set_xticklabels([])
-        ax.set_yticklabels([])
+        ax.set_xlim(0.0 - self.thickness, 1.0 + self.thickness)
+        ax.set_ylim(0.0 - self.thickness, 1.0 + self.thickness)
+        ax.set_xticks([])
+        ax.set_yticks([])
 
         obstacles = self.geoms.geom_objs
         rects = []
