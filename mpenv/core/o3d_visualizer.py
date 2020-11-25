@@ -45,8 +45,8 @@ class Open3DVisualizer:
         if new_instance and not blocking:
             self._create_viz()
 
+        n = p0.shape[0]
         if new_instance:
-            n = p0.shape[0]
             pcd0 = o3d.geometry.PointCloud()
             pcd1 = o3d.geometry.PointCloud()
             pcd0.points = o3d.utility.Vector3dVector(p0)
@@ -60,6 +60,8 @@ class Open3DVisualizer:
         else:
             self.pcd.points = o3d.utility.Vector3dVector(np.vstack((p0, p1)))
             self.lines.points = self.pcd.points
+            correspondances = np.stack((np.arange(0, n), np.arange(n, 2 * n)), 1)
+            self.lines.lines = o3d.utility.Vector2iVector(correspondances)
 
         if not blocking:
             if new_instance:
