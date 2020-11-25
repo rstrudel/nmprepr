@@ -55,6 +55,8 @@ For 5x5 grids use `Maze-Medium-v0` and for 7x7 grid use `Maze-Hard-v0`.
     <img src="images/hard.png" width="250">
 </p>
 
+Note that the mazes are randomly generated. At each episode the agent has to solve a problem with a diffrent maze.
+
 ### Monitor
 
 You can monitor experiments with
