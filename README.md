@@ -13,7 +13,7 @@ CoRL 2020
 ### Table of Content
 
 - [Setup](#setup)
-- [Training](#training)
+- [Training](#train)
 - [Run](#run)
 - [Logging](#logging)
 - [Cite](#cite)
