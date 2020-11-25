@@ -3,6 +3,7 @@
 Robin Strudel, Ricardo Garcia, Justin Carpentier, Jean-Paul Laumond, Ivan Laptev, Cordelia Schmid\
 CoRL 2020
 
+![](images/overview.png)
 
 - [Project Page](https://www.di.ens.fr/willow/research/nmp_repr/)
 - [Paper](https://arxiv.org/abs/2008.11174)
@@ -49,13 +50,13 @@ python -m nmp.train Maze-Simple-v0 maze_baseline --horizon 75 --seed 0
 For 5x5 grids use `Maze-Medium-v0` and for 7x7 grid use `Maze-Hard-v0`.
 <div id="banner">
     <div class="inline-block">
-        <img src="images/easy.png" width="200">
+        <img src="images/easy.png" width="100">
     </div>
     <div class="inline-block">
-        <img src="images/medium.png" width="200">
+        <img src="images/medium.png" width="100">
     </div>
     <div class="inline-block">
-        <img src="images/hard.png" width="200">
+        <img src="images/hard.png" width="100">
     </div>
 </div>
 
