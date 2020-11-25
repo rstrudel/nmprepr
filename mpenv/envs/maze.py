@@ -68,28 +68,6 @@ class MazeGoal(Base):
         geoms = Geometries(geom_objs)
         return geoms, idx_env
 
-    def compute_surface_pcd(self, n_pts):
-        return obstacles_to_surface_2dpcd(self.geoms, n_pts)
-
-    def compute_volume_pcd(self, n_pts):
-        return obstacles_to_volume_2dpcd(self.geoms, n_pts)
-
-    def compute_occupancy_grid(self, size):
-        def collision(pts):
-            collisions = np.zeros(pts.shape[0])
-            for i, pt in enumerate(pts):
-                if 0 <= pt[0] <= 1 and 0 <= pt[1] <= 1:
-                    q = np.zeros(7)
-                    q[-1] = 1
-                    q[:2] = pt
-                    collisions[i] = self.model_wrapper.collision(q)
-                else:
-                    collisions[i] = True
-
-            return collisions
-
-        return obstacles_to_occupancy_grid(size, collision)
-
     def set_eval(self):
         pass
 
@@ -145,52 +123,6 @@ def extract_obstacles(maze, thickness):
         obstacles.append(mesh.geom_obj())
 
     return obstacles
-
-
-def obstacles_to_surface_2dpcd(geoms, n_pts):
-    points, normals = geoms.compute_surface_pcd(5 * n_pts)
-    # reject points with normals in the z direction or outside of [0, 1]
-    within_box = np.logical_and(points[:, :2] < 1.0, points[:, :2] > 0.0).all(axis=1)
-    hori_normals = np.abs(normals[:, 2]) < 1e-3
-    valid_pts = np.logical_and(within_box, hori_normals)
-    points = points[valid_pts]
-    normals = normals[valid_pts]
-    points[:, 2] = 0
-    # sparse representation
-    points, indices = utils.sparse_subset(points, 0.015)
-    normals = normals[indices]
-    # match required size
-    points, indices = utils.match_size(points, n_pts)
-    normals = normals[indices]
-    return points, normals
-
-
-def obstacles_to_volume_2dpcd(geoms, n_pts):
-    points = geoms.compute_volume_pcd(int(1.5 * n_pts))
-    points[:, 2] = 0
-    # sparse representation
-    points, indices = utils.sparse_subset(points, 0.015)
-    # match required size
-    points, indices = utils.match_size(points, n_pts)
-    return points
-
-
-def obstacles_to_occupancy_grid(grid_size, collision):
-    cond_occ = np.zeros((grid_size * grid_size))
-    occ_grid_samples = np.zeros((grid_size * grid_size, 2))
-    grid_points_range = np.linspace(0, 1, num=grid_size + 1)[:-1] + 1 / (2 * grid_size)
-
-    idx = 0
-    for j, y in enumerate(grid_points_range):
-        for i, x in enumerate(grid_points_range):
-            # cond_occ_xy[1:, j, i] = np.array([x, y])
-            occ_grid_samples[idx, 0] = x
-            occ_grid_samples[idx, 1] = y
-            idx += 1
-
-    occ_grid = collision(occ_grid_samples)
-
-    return occ_grid, occ_grid_samples
 
 
 def maze_pointcloud(n_samples, on_surface, add_normals, coordinate_frame):
