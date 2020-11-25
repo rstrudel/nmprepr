@@ -50,7 +50,7 @@ class MazeGoal(Base):
         while not valid_sample:
             self.state = self.random_configuration()
             self.goal_state = self.random_configuration()
-            valid_sample = True
+            valid_sample = self.validate_sample(self.state, self.goal_state)
         if start is not None:
             self.set_state(start)
         if goal is not None:
@@ -61,6 +61,14 @@ class MazeGoal(Base):
         self.fig, self.ax, self.pos = None, None, None
 
         return self.observation()
+
+    def validate_sample(self, state, goal_state):
+        "Filter start and goal with straight path solution"
+        straight_path = self.model_wrapper.arange(
+            state, goal_state, self.delta_collision_check
+        )
+        _, collide = self.stopping_configuration(straight_path)
+        return collide.any()
 
     def get_obstacles_geoms(self, idx_env):
         np_random = self._np_random
