@@ -76,7 +76,7 @@ python -m nmp.run Maze-Simple-v0 --exp-name log_dir/params.pkl --seed 100 --hori
 
 ## Observation
 
-The maze are represented by a set of edges (x1, y1, x2, y2) which are passed through PointNet.
+A maze is represented by a set of edges (x1, y1, x2, y2) which are passed through PointNet.
 The edge set and goals are centered with respect to the agent current position. You can see below on the left an example of an environment and on the right its representation:
 
 <img src="images/maze_repr.png" width="600">
