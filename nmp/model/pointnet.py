@@ -20,7 +20,7 @@ class PointNet(nn.Module):
         output_size,
         hidden_sizes,
         robot_props,
-        obstacle_point_dim,
+        elem_dim,
         q_action_dim,
         input_indices,
         coordinate_frame,
@@ -35,13 +35,13 @@ class PointNet(nn.Module):
         self.link_dim = robot_props[coordinate_frame]["link_dim"]
         self.config_dim = robot_props[coordinate_frame]["config_dim"]
         self.goal_dim = robot_props[coordinate_frame]["goal_rep_dim"]
-        self.obstacle_point_dim = obstacle_point_dim
+        self.elem_dim = elem_dim
         self.coordinate_frame = coordinate_frame
         self.output_activation = output_activation
 
         self.q_action_dim = q_action_dim
         self.blocks_sizes = get_blocks_sizes(
-            self.obstacle_point_dim,
+            self.elem_dim,
             self.config_dim,
             self.goal_dim,
             self.q_action_dim,
@@ -67,8 +67,8 @@ class PointNet(nn.Module):
         self.last_fc.bias.data.uniform_(-init_w, init_w)
 
     def forward(self, *input, return_features=False):
-        obstacles, links, goal, action = process_input(
-            self.input_indices, self.obstacle_point_dim, self.coordinate_frame, *input
+        obstacles, links, goal, action, mask = process_input(
+            self.input_indices, self.elem_dim, self.coordinate_frame, *input
         )
         batch_size = obstacles.shape[0]
 
@@ -81,6 +81,7 @@ class PointNet(nn.Module):
             h = torch.cat((obstacles, links, goal, action), dim=2)
 
         h = self.block0(h)
+        h = h * mask[..., None]
         h = torch.max(h, 1)[0]
 
         if self.coordinate_frame == "local":
@@ -103,27 +104,22 @@ class PointNet(nn.Module):
 
 
 def get_blocks_sizes(
-    obstacle_point_dim,
-    config_dim,
-    goal_dim,
-    q_action_dim,
-    hidden_sizes,
-    coordinate_frame,
+    elem_dim, config_dim, goal_dim, q_action_dim, hidden_sizes, coordinate_frame,
 ):
     if coordinate_frame == "local":
         # early action integration
-        obstacles_sizes = [obstacle_point_dim + q_action_dim] + hidden_sizes
+        obstacles_sizes = [elem_dim + q_action_dim] + hidden_sizes
         global_sizes = [hidden_sizes[0] + goal_dim] + hidden_sizes
     elif coordinate_frame == "global":
         obstacles_sizes = [
-            obstacle_point_dim + config_dim + q_action_dim + goal_dim
+            elem_dim + config_dim + q_action_dim + goal_dim
         ] + hidden_sizes
         global_sizes = [hidden_sizes[0]] + hidden_sizes
 
     return obstacles_sizes, global_sizes
 
 
-def process_input(input_indices, obstacle_point_dim, coordinate_frame, *input):
+def process_input(input_indices, elem_dim, coordinate_frame, *input):
     """
     input: s or (s, a)
     BS x N
@@ -135,21 +131,26 @@ def process_input(input_indices, obstacle_point_dim, coordinate_frame, *input):
 
     batch_size = out.shape[0]
     obstacles = out[:, input_indices["obstacles"]]
-    obstacles = obstacles.view(batch_size, -1, obstacle_point_dim)
-    n_obsts = obstacles.shape[1]
+    n_elems = obstacles[:, -1]
+    obstacles = obstacles[:, :-1]
+    obstacles = obstacles.view(batch_size, -1, elem_dim)
+    n_elems_pad = obstacles.shape[1]
+
+    mask = torch.arange(n_elems_pad, device=obstacles.device)
+    mask = mask[None, :] < n_elems[:, None]
 
     if action is None:
         action = torch.zeros((batch_size, 0), device=obstacles.device)
     # ealry action integration
-    action = action.unsqueeze(1).expand(-1, n_obsts, -1)
+    action = action.unsqueeze(1).expand(-1, n_elems_pad, -1)
 
     goal = out[:, input_indices["goal"]]
     if coordinate_frame == "global":
-        goal = goal.unsqueeze(1).expand(batch_size, n_obsts, goal.shape[-1])
+        goal = goal.unsqueeze(1).expand(batch_size, n_elems_pad, goal.shape[-1])
 
     links = None
     if coordinate_frame == "global":
         links = out[:, input_indices["robot"]]
-        links = links.unsqueeze(1).expand(-1, n_obsts, -1)
+        links = links.unsqueeze(1).expand(-1, n_elems_pad, -1)
 
-    return obstacles, links, goal, action
+    return obstacles, links, goal, action, mask
