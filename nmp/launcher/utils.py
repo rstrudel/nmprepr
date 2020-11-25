@@ -53,7 +53,7 @@ def get_policy_network(archi, kwargs, env, policy_type):
         obstacle_point_dim = env.obstacle_point_dim
         kwargs["q_action_dim"] = 0
         kwargs["robot_props"] = robot_props
-        kwargs["obstacle_point_dim"] = obstacle_point_dim
+        kwargs["elem_dim"] = obstacle_point_dim
         kwargs["input_indices"] = obs_indices
         kwargs["hidden_activation"] = F.elu
         kwargs["coordinate_frame"] = coordinate_frame
@@ -101,7 +101,7 @@ def get_q_network(archi, kwargs, env, classification=False):
         obstacle_point_dim = env.obstacle_point_dim
         kwargs["q_action_dim"] = q_action_dim
         kwargs["robot_props"] = robot_props
-        kwargs["obstacle_point_dim"] = obstacle_point_dim
+        kwargs["elem_dim"] = obstacle_point_dim
         kwargs["input_indices"] = obs_indices
         kwargs["hidden_activation"] = F.elu
         kwargs["coordinate_frame"] = coordinate_frame
