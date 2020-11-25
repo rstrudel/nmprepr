@@ -4,8 +4,6 @@ Robin Strudel, Ricardo Garcia, Justin Carpentier, Jean-Paul Laumond, Ivan Laptev
 CoRL 2020
 
 
-![](images/overview.png)
-
 - [Project Page](https://www.di.ens.fr/willow/research/nmp_repr/)
 - [Paper](https://arxiv.org/abs/2008.11174)
 
@@ -13,26 +11,12 @@ CoRL 2020
 
 ### Table of Content
 
-- [Cite](#cite)
 - [Setup](#setup)
 - [Training](#training)
-  - [Train on narrow passages](#narrow-passages)
-  - [Train on 3D environments](#3d-environments)
-  - [Monitor experiments](#monitor)
 - [Run](#run)
 - [Logging](#logging)
+- [Cite](#cite)
 
-## Cite
-
-Please cite our work if you use our code or compare to our approach
-```
-@inproceedings{strudelnmp2020,
-title={Learning Obstacle Representations for Neural Motion Planning},
-author={R. {Strudel} and R. {Garcia} and J. {Carpentier} and J.P. {Laumond} and I. {Laptev} and C. {Schmid}},
-journal={Proceedings of Conference on Robot Learning (CoRL)},
-year={2020}
-}
-```
 
 ## Setup
 
@@ -63,10 +47,17 @@ python -m nmp.train Maze-Simple-v0 maze_baseline --horizon 75 --seed 0
 ```
 
 For 5x5 grids use `Maze-Medium-v0` and for 7x7 grid use `Maze-Hard-v0`.
-
-<img src="images/easy.png" width="200">
-<img src="images/medium.png" width="200">
-<img src="images/hard.png" width="200">
+<div id="banner">
+    <div class="inline-block">
+        <img src="images/easy.png" width="200">
+    </div>
+    <div class="inline-block">
+        <img src="images/medium.png" width="200">
+    </div>
+    <div class="inline-block">
+        <img src="images/hard.png" width="200">
+    </div>
+</div>
 
 ### Monitor
 
@@ -99,4 +90,16 @@ The edge set and goals are centered with respect to the agent current position. 
 By default the checkpointing will be in your home directory. You can change it by defining a `CHECKPOINT` environment variable. Add the following to your `.bashrc` file to change the logging directory.
 ```
 export CHECKPOINT=/path/to/checkpoints
+```
+
+## Cite
+
+Please cite our work if you use our code or compare to our approach
+```
+@inproceedings{strudelnmp2020,
+title={Learning Obstacle Representations for Neural Motion Planning},
+author={R. {Strudel} and R. {Garcia} and J. {Carpentier} and J.P. {Laumond} and I. {Laptev} and C. {Schmid}},
+journal={Proceedings of Conference on Robot Learning (CoRL)},
+year={2020}
+}
 ```
