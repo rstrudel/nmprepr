@@ -16,12 +16,9 @@ class PointCloudObserver(BaseObserver):
 
         self.n_samples = n_samples
         self.on_surface = on_surface
-        if on_surface and add_normals:
-            self.obstacle_point_dim = 6
-        else:
-            self.obstacle_point_dim = 3
+        self.obstacle_point_dim = 6 if (on_surface and add_normals) else 3
         self.add_normals = add_normals
-        self.obstacles_dim = self.n_samples * self.obstacle_point_dim
+        self.obstacles_dim = self.n_samples * self.obstacle_point_dim + 1
         self.coordinate_frame = coordinate_frame
         if coordinate_frame not in ["local", "global"]:
             raise ValueError(f"Invalid coordinate system: {coordinate_frame}")
@@ -77,8 +74,11 @@ class PointCloudObserver(BaseObserver):
         obstacles_repr[:, :3] = self.normalize(
             obstacles_repr[:, :3], self.coordinate_frame
         )
+        obstacles_flat = obstacles_repr.flatten()
+        # add number of points as last index
+        obstacles_flat = np.hstack((obstacles_flat, obstacles_repr.shape[0]))
 
-        return obstacles_repr
+        return obstacles_flat
 
     def compute_obs(self, state):
         q, oMi, oMg = state.q_oM
@@ -88,7 +88,7 @@ class PointCloudObserver(BaseObserver):
         obstacles_pcd = self.represent_obstacles(oMi, self.obstacles_pcd)
         # self.viz.show_obstacles_pin(self.obstacles_pcd)
 
-        return {"pcd": obstacles_pcd.flatten()}
+        return {"pcd": obstacles_pcd}
 
     def observation(self, obs):
         state = self.env.get_state()
