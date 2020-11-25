@@ -26,10 +26,8 @@ class MazeObserver(BaseObserver):
             x, y = obst.placement.translation[:2]
             half_side = obst.geometry.halfSide
             w, h = 2 * half_side[:2]
-            if np.allclose(w, self.env.thickness):
-                w = 0
-            if np.allclose(h, self.env.thickness):
-                h = 0
+            w = np.max(w - self.env.thickness, 0)
+            h = np.max(h - self.env.thickness, 0)
             edges.append([x - w / 2, y - h / 2, x + w / 2, y + h / 2])
         edges = np.array(edges)
         self.edges = np.zeros((self.max_edges, self.obstacle_point_dim))

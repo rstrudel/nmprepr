@@ -52,17 +52,22 @@ class Open3DVisualizer:
             pcd0.points = o3d.utility.Vector3dVector(p0)
             pcd1.points = o3d.utility.Vector3dVector(p1)
             correspondances = np.stack((np.arange(n), np.arange(n)), 1)
+            self.pcd = o3d.geometry.PointCloud()
+            self.pcd.points = o3d.utility.Vector3dVector(np.vstack((p0, p1)))
             self.lines = o3d.geometry.LineSet.create_from_point_cloud_correspondences(
                 pcd0, pcd1, correspondances
             )
         else:
-            self.lines.points = o3d.utility.Vector3dVector(np.vstack((p0, p1)))
+            self.pcd.points = o3d.utility.Vector3dVector(np.vstack((p0, p1)))
+            self.lines.points = self.pcd.points
 
         if not blocking:
             if new_instance:
                 self.viz.add_geometry(self.lines)
+                self.viz.add_geometry(self.pcd)
             else:
                 self.viz.update_geometry(self.lines)
+                self.viz.update_geometry(self.pcd)
                 self.viz.poll_events()
                 self.viz.update_renderer()
         else:

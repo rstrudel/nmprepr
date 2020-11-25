@@ -105,12 +105,10 @@ def extract_obstacles(maze, thickness):
     obstacles = []
     for i, obst_coord in enumerate(obstacles_coord):
         x1, y1, x2, y2 = obst_coord[0], obst_coord[1], obst_coord[2], obst_coord[3]
-        if np.allclose(x1, x2):
-            x1 -= thickness / 2
-            x2 = x1 + thickness
-        if np.allclose(y1, y2):
-            y1 -= thickness / 2
-            y2 = y1 + thickness
+        x1 -= thickness / 2
+        x2 += thickness / 2
+        y1 -= thickness / 2
+        y2 += thickness / 2
         box_size = [x2 - x1, y2 - y1, 0.1]
         pos = [(x1 + x2) / 2, (y1 + y2) / 2, 0]
         placement = pin.SE3(np.eye(3), np.array(pos))
