@@ -118,7 +118,7 @@ class MazeGoal(Base):
         sg = collections.EllipseCollection(
             widths=size,
             heights=size,
-            facecolors=[(0, 1, 0, 0.8), (1, 0, 0, 0.8)],
+            facecolors=[(1, 0, 0, 0.8), (0, 1, 0, 0.8)],
             angles=0,
             units="xy",
             offsets=offsets,
