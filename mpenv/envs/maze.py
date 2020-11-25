@@ -136,10 +136,6 @@ def extract_obstacles(maze, thickness):
     scy = 1 / maze.ny
 
     obstacles_coord = []
-    # obstacles_coord.append((0, 0, 1, 0))
-    # obstacles_coord.append((0, 0, 0, 1))
-    # obstacles_coord.append((0, 1, 1, 1))
-    # obstacles_coord.append((1, 0, 1, 1))
     for x in range(maze.nx):
         obstacles_coord.append((x / maze.nx, 0, (x + 1) / maze.nx, 0))
     for y in range(maze.ny):
@@ -186,15 +182,8 @@ def extract_obstacles(maze, thickness):
     return obstacles
 
 
-def maze_pointcloud(n_samples, on_surface, add_normals, coordinate_frame):
-    env = MazeGoal()
-    env = PointCloudObserver(env, n_samples, coordinate_frame, on_surface, add_normals)
-    env = RobotLinksObserver(env, coordinate_frame)
-    return env
-
-
-def maze_edges():
-    env = MazeGoal()
+def maze_edges(grid_size):
+    env = MazeGoal(grid_size)
     env = MazeObserver(env)
     coordinate_frame = "local"
     env = RobotLinksObserver(env, coordinate_frame)
@@ -202,7 +191,7 @@ def maze_edges():
 
 
 def maze_raytracing(n_samples, n_rays):
-    env = MazeGoal()
+    env = MazeGoal(grid_size=3)
     visibility_radius = 0.7
     memory_distance = 0.06
     env = RayTracingObserver(env, n_samples, n_rays, visibility_radius, memory_distance)
