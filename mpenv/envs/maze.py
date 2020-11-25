@@ -76,9 +76,15 @@ class MazeGoal(Base):
     def render(self, *unused_args, **unused_kwargs):
         if self.fig is None:
             self.init_matplotlib()
-            self.pos = self.ax.scatter(self.state.q[0], self.state.q[1], color="black")
+            self.pos = self.ax.scatter(
+                self.state.q[0], self.state.q[1], color="orange", s=200
+            )
         else:
-            self.pos.set_offsets(self.state.q[:2])
+            prev_pos = self.pos.get_offsets().data
+            new_pos = self.state.q[:2][None, :]
+            x = np.vstack((prev_pos, new_pos))
+            self.ax.plot(x[:, 0], x[:, 1], c=(0, 0, 0, 0.5))
+            self.pos.set_offsets(new_pos)
         plt.draw()
         plt.pause(0.01)
 
