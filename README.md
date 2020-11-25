@@ -21,10 +21,11 @@ CoRL 2020
 
 ## Setup
 
-Download the code
+Download the code and switch to `recvis20` branch
 ```
 git clone https://github.com/rstrudel/nmprepr
 cd nmprepr
+git checkout recvis20
 ```
 
 To create a new conda environment containing dependencies
