@@ -49,9 +49,9 @@ python -m nmp.train Maze-Simple-v0 maze_baseline --horizon 75 --seed 0
 
 For 5x5 grids use `Maze-Medium-v0` and for 7x7 grid use `Maze-Hard-v0`.
 <p float="left">
-  <img src="images/easy.png" width="100">
-  <img src="images/medium.png" width="100">
-  <img src="images/hard.png" width="100">
+  <img src="images/easy.png" width="250">
+  <img src="images/medium.png" width="250">
+  <img src="images/hard.png" width="250">
 </p>
 
 ### Monitor
