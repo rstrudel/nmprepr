@@ -77,15 +77,19 @@ def extract_obstacles(maze, thickness):
     scy = 1 / maze.ny
 
     obstacles_coord = []
-    obstacles_coord.append((0, 0, 1, 0))
-    obstacles_coord.append((0, 0, 0, 1))
-    obstacles_coord.append((1, 0, 1, 1))
-    obstacles_coord.append((0, 1, 1, 1))
+    # obstacles_coord.append((0, 0, 1, 0))
+    # obstacles_coord.append((0, 0, 0, 1))
+    # obstacles_coord.append((0, 1, 1, 1))
+    # obstacles_coord.append((1, 0, 1, 1))
+    for x in range(maze.nx):
+        obstacles_coord.append((x / maze.nx, 0, (x + 1) / maze.nx, 0))
+    for y in range(maze.ny):
+        obstacles_coord.append((0, y / maze.ny, 0, (y + 1) / maze.ny))
     # Draw the "South" and "East" walls of each cell, if present (these
     # are the "North" and "West" walls of a neighbouring cell in
     # general, of course).
-    for x in range(maze.nx - 1):
-        for y in range(maze.ny - 1):
+    for x in range(maze.nx):
+        for y in range(maze.ny):
             if maze.cell_at(x, y).walls["S"]:
                 x1, y1, x2, y2 = (
                     x * scx,
