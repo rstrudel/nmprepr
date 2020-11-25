@@ -2,7 +2,6 @@ import os
 import numpy as np
 from gym import spaces
 import hppfcl
-import csv
 import pinocchio as pin
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
@@ -27,7 +26,7 @@ class MazeGoal(Base):
         super().__init__(robot_name="sphere")
 
         self.thickness = 0.02
-        self.grid_size = 7
+        self.grid_size = 3
         self.robot_name = "sphere"
         self.freeflyer_bounds = np.array(
             [[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], [1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]]
@@ -37,8 +36,7 @@ class MazeGoal(Base):
             low=-1, high=1, shape=(self.robot_props["action_dim"],), dtype=np.float32
         )
 
-        self.normalizer_local = {"mean": 0.0, "std": 0.3}
-        self.normalizer_global = {"mean": 0.5, "std": 0.5}
+        self.fig, self.ax, self.pos = None, None, None
 
     def _reset(self, idx_env=None, start=None, goal=None):
         model_wrapper = self.model_wrapper
@@ -58,6 +56,10 @@ class MazeGoal(Base):
         if goal is not None:
             self.set_goal_state(goal)
 
+        if self.fig:
+            plt.close()
+        self.fig, self.ax, self.pos = None, None, None
+
         return self.observation()
 
     def get_obstacles_geoms(self, idx_env):
@@ -70,6 +72,57 @@ class MazeGoal(Base):
 
     def set_eval(self):
         pass
+
+    def render(self, *unused_args, **unused_kwargs):
+        if self.fig is None:
+            self.init_matplotlib()
+            self.pos = self.ax.scatter(self.state.q[0], self.state.q[1], color="black")
+        else:
+            self.pos.set_offsets(self.state.q[:2])
+        plt.draw()
+        plt.pause(0.01)
+
+    def init_matplotlib(self):
+        plt.ion()
+
+        fig = plt.figure(figsize=(10, 10))
+        ax = fig.add_subplot(111, aspect="equal")
+        ax.set_xticks(np.linspace(0, 1, self.maze.nx + 1, endpoint=True))
+        ax.set_yticks(np.linspace(0, 1, self.maze.ny + 1, endpoint=True))
+        ax.set_xticklabels([])
+        ax.set_yticklabels([])
+
+        obstacles = self.geoms.geom_objs
+        rects = []
+        for i, obst in enumerate(obstacles):
+            x, y = obst.placement.translation[:2]
+            half_side = obst.geometry.halfSide
+            w, h = 2 * half_side[:2]
+            rects.append(
+                patches.Rectangle(
+                    (x - w / 2, y - h / 2), w, h  # (x,y)  # width  # height
+                )
+            )
+        coll = collections.PatchCollection(rects, zorder=1)
+        coll.set_alpha(0.6)
+        ax.add_collection(coll)
+
+        size = self.robot_props["dist_goal"]
+        offsets = np.stack((self.state.q, self.goal_state.q), 0)[:, :2]
+        sg = collections.EllipseCollection(
+            widths=size,
+            heights=size,
+            facecolors=[(0, 1, 0, 0.8), (1, 0, 0, 0.8)],
+            angles=0,
+            units="xy",
+            offsets=offsets,
+            transOffset=ax.transData,
+        )
+        ax.add_collection(sg)
+
+        plt.tight_layout()
+        self.fig = fig
+        self.ax = ax
 
 
 def extract_obstacles(maze, thickness):
