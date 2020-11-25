@@ -196,24 +196,25 @@ str_register_env = f"Maze-v0"
 kwargs = {"n_rays": 256}
 for ns in num_samples:
     kwargs["n_samples"] = ns
-
-    # Global Coordinate Frame
-    # str_register_env = f"Maze-{ns}Pts-GlobalSurface{str_normals}-v0"
-    # kwargs["coordinate_frame"] = "global"
-    # register(
-    #     id=str_register_env,
-    #     entry_point="mpenv.envs.maze:maze_pointcloud",
-    #     kwargs=kwargs.copy(),
-    # )
-
-    # Local Coordinate Frame
     env_str = f"Maze-{ns}Pts-Rays"
     register(
         id=f"{env_str}-v0",
         entry_point="mpenv.envs.maze:maze_raytracing",
         kwargs=kwargs.copy(),
     )
-env_str = f"Maze-Global"
+
 register(
-    id=f"{env_str}-v0", entry_point="mpenv.envs.maze:maze_edges", kwargs={},
+    id=f"Maze-Simple-v0",
+    entry_point="mpenv.envs.maze:maze_edges",
+    kwargs={"grid_size": 3},
+)
+register(
+    id=f"Maze-Medium-v0",
+    entry_point="mpenv.envs.maze:maze_edges",
+    kwargs={"grid_size": 5},
+)
+register(
+    id=f"Maze-Hard-v0",
+    entry_point="mpenv.envs.maze:maze_edges",
+    kwargs={"grid_size": 7},
 )

@@ -22,11 +22,11 @@ from mpenv.observers.maze import MazeObserver
 
 
 class MazeGoal(Base):
-    def __init__(self):
+    def __init__(self, grid_size):
         super().__init__(robot_name="sphere")
 
         self.thickness = 0.02
-        self.grid_size = 3
+        self.grid_size = grid_size
         self.robot_name = "sphere"
         self.freeflyer_bounds = np.array(
             [[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], [1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]]
