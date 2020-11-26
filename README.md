@@ -61,7 +61,7 @@ Note that the mazes are randomly generated. At each episode the agent has to sol
 
 On `Maze-Simple-v0` you should get a success rate similiar to the curve below:
 
-<img src="images/stdrew_success_3x3.png" width="400">
+<img src="images/success_3x3_corlrew.png" width="400">
 
 
 ### Monitor
